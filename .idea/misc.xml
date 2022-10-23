@@ -5,13 +5,14 @@
       <map>
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/drawable/ic_delete.xml" value="0.1265" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout-land/fragment_statistics.xml" value="0.1" />
-        <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/activity_main.xml" value="0.48758465011286684" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/fragment_run.xml" value="0.1" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/fragment_setup.xml" value="0.1" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/fragment_statistics.xml" value="0.1" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/fragment_tracking.xml" value="0.1" />
         <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/layout/item_run.xml" value="0.1" />
+        <entry key="..\:/Android/Kotlin/Projects/RunningTrackerApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.16203703703703703" />
       </map>
     </option>
   </component>
