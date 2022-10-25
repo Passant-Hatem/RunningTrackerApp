@@ -2,6 +2,7 @@ package com.example.runningtrackerapp.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,7 +27,13 @@ class MainActivity : AppCompatActivity() {
         //set up navigation
         val navController = setupNavController()
         attachNavUIToController(navController)
-
+        navController.addOnDestinationChangedListener{_ ,destination, _ ->
+            when(destination.id){
+                R.id.settingsFragment, R.id.runFragment, R.id.statisticsFragment ->
+                 binding.bottomNavigationView.visibility = View.VISIBLE
+                else -> binding.bottomNavigationView.visibility = View.GONE
+            }
+        }
     }
 
     private fun attachNavUIToController(navController: NavController) {
