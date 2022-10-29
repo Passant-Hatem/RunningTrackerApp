@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">RunningTrackerApp</string>
+    <string name="google_maps_key">AIzaSyCG1bsafE9INj6WM4wXMAj-Kg-q8X4Xk0c</string>
 
     <string-array name="filter_options">
         <item>Date</item>

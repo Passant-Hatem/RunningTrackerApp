@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.runningtrackerapp"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -81,8 +81,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
     // Easy Permissions
-    // For developers using AndroidX in their applications
-    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
 
     // For developers using the Android Support Library
     implementation 'pub.devrel:easypermissions:3.0.0'
@@ -96,4 +95,7 @@ dependencies {
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.43.2"
     kapt "com.google.dagger:hilt-android-compiler:2.44"
+
+    implementation "androidx.activity:activity-ktx:1.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.4"
 }
