@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.runningtrackerapp.R
 import com.example.runningtrackerapp.databinding.FragmentRunBinding
 import com.example.runningtrackerapp.presentation.viewmodels.MainViewModel
 import com.example.runningtrackerapp.util.Constants.REQUEST_CODE_LOCATION_PERMISSION
@@ -32,6 +34,12 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View? {
         _binding = FragmentRunBinding.inflate(inflater, container, false)
         requestLocationPermissions()
+
+        binding.fab.setOnClickListener {
+            findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
+        }
+
+
         return binding.root
     }
 
