@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.example.runningtrackerapp.databinding.FragmentTrackingBinding
 import com.example.runningtrackerapp.presentation.viewmodels.MainViewModel
 import com.example.runningtrackerapp.service.Polyline
@@ -17,6 +16,7 @@ import com.example.runningtrackerapp.util.Constants.ACTION_START_OR_RESUME_SERVI
 import com.example.runningtrackerapp.util.Constants.MAP_ZOOM
 import com.example.runningtrackerapp.util.Constants.POLYLINE_COLOR
 import com.example.runningtrackerapp.util.Constants.POLYLINE_WIDTH
+import com.example.runningtrackerapp.util.CustomTimeFormat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.PolylineOptions
@@ -31,6 +31,8 @@ class TrackingFragment : Fragment() {
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
+
+    private var curTimeInMillis = 0L
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -63,15 +65,21 @@ class TrackingFragment : Fragment() {
     }
 
     private fun subscribeToObservers() {
-        TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
+        TrackingService.isTracking.observe(viewLifecycleOwner) {
             updateTracking(it)
-        })
+        }
 
-        TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
+        TrackingService.pathPoints.observe(viewLifecycleOwner) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
-        })
+        }
+
+        TrackingService.timeRunInMillis.observe(viewLifecycleOwner) {
+            curTimeInMillis = it
+            val formattedTime = CustomTimeFormat.getFormattedStopWatchTime(curTimeInMillis, true)
+            binding.tvTimer.text = formattedTime
+        }
     }
 
     private fun toggleRun() {

@@ -24,8 +24,13 @@ import com.example.runningtrackerapp.util.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.runningtrackerapp.util.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.runningtrackerapp.util.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.runningtrackerapp.util.Constants.NOTIFICATION_ID
+import com.example.runningtrackerapp.util.Constants.TIMER_UPDATE_INTERVAL
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.EasyPermissions
 
 typealias Polyline = MutableList<LatLng>
@@ -39,7 +44,10 @@ class TrackingService :  LifecycleService() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    private val timeRunInSeconds = MutableLiveData<Long>()
+
     companion object{
+        val timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<PolyLines>()
     }
@@ -47,6 +55,8 @@ class TrackingService :  LifecycleService() {
     private fun postInitialValues() {
         isTracking.postValue(false)
         pathPoints.postValue(mutableListOf())
+        timeRunInSeconds.postValue(0L)
+        timeRunInMillis.postValue(0L)
     }
 
     override fun onCreate() {
@@ -67,7 +77,8 @@ class TrackingService :  LifecycleService() {
                         startForegroundService()
                         isFirstRun = false
                     } else {
-                        startForegroundService()                    }
+                        startTimer()
+                    }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     pauseService()
@@ -85,6 +96,7 @@ class TrackingService :  LifecycleService() {
 
     private fun pauseService() {
         isTracking.postValue(false)
+        isTimerEnabled = false
     }
 
     @Suppress("DEPRECATION")
@@ -139,6 +151,7 @@ class TrackingService :  LifecycleService() {
 
 
     private fun startForegroundService(){
+        startTimer()
         addEmptyPolyline()
         isTracking.postValue(true)
 
@@ -185,4 +198,33 @@ class TrackingService :  LifecycleService() {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+
+    private var isTimerEnabled = false
+    private var lapTime = 0L
+    private var timeRun = 0L
+    private var timeStarted = 0L
+    private var lastSecondTimestamp = 0L
+
+    private fun startTimer() {
+        addEmptyPolyline()
+        isTracking.postValue(true)
+        timeStarted = System.currentTimeMillis()
+        isTimerEnabled = true
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isTracking.value!!) {
+                // time difference between now and timeStarted
+                lapTime = System.currentTimeMillis() - timeStarted
+                // post the new lapTime
+                timeRunInMillis.postValue(timeRun + lapTime)
+                if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
+                    timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
+                    lastSecondTimestamp += 1000L
+                }
+                delay(TIMER_UPDATE_INTERVAL)
+            }
+            timeRun += lapTime
+        }
+    }
+
+
 }
