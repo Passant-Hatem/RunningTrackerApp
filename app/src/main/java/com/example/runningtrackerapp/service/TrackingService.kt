@@ -67,11 +67,10 @@ class TrackingService :  LifecycleService() {
                         startForegroundService()
                         isFirstRun = false
                     } else {
-                        Log.d("Location Service","Service is running")
-                    }
+                        startForegroundService()                    }
                 }
                 ACTION_PAUSE_SERVICE -> {
-                    Log.d("Location Service","Paused service")
+                    pauseService()
                 }
                 ACTION_STOP_SERVICE -> {
                     Log.d("Location Service","Stopped service")
@@ -82,6 +81,10 @@ class TrackingService :  LifecycleService() {
             }
         }
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun pauseService() {
+        isTracking.postValue(false)
     }
 
     @Suppress("DEPRECATION")
