@@ -3,6 +3,8 @@ package com.example.runningtrackerapp.di
 import android.content.Context
 import androidx.room.Room
 import com.example.runningtrackerapp.data.local.RunningDatabase
+import com.example.runningtrackerapp.data.repository.MainRepositoryImp
+import com.example.runningtrackerapp.domain.repository.MainRepository
 import com.example.runningtrackerapp.util.Constants.RUNNING_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
@@ -26,7 +28,10 @@ object AppModule {
         RUNNING_DATABASE_NAME
     ).build()
 
+
     @Singleton
     @Provides
-    fun provideRunDao(db: RunningDatabase) = db.getRunDao()
+    fun provideMainRepository(database: RunningDatabase): MainRepository{
+        return MainRepositoryImp(database.getRunDao())
+    }
 }

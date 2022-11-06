@@ -6,8 +6,8 @@ import com.example.runningtrackerapp.domain.model.Run
 import com.example.runningtrackerapp.domain.repository.MainRepository
 import javax.inject.Inject
 
-class MainRepositoryImp @Inject constructor(
-    private val runningDao: RunningDao
+class MainRepositoryImp (
+   private val runningDao: RunningDao
 ): MainRepository{
     override suspend fun insertRun(run: Run) = runningDao.insertRun(run)
 

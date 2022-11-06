@@ -1,13 +1,16 @@
 package com.example.runningtrackerapp.presentation.fragments
 
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningtrackerapp.R
 import com.example.runningtrackerapp.databinding.FragmentTrackingBinding
+import com.example.runningtrackerapp.domain.model.Run
 import com.example.runningtrackerapp.presentation.viewmodels.MainViewModel
 import com.example.runningtrackerapp.service.Polyline
 import com.example.runningtrackerapp.service.TrackingService
@@ -20,14 +23,19 @@ import com.example.runningtrackerapp.util.Constants.POLYLINE_WIDTH
 import com.example.runningtrackerapp.util.CustomTimeFormat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.*
+import kotlin.math.round
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment() {
     private var _binding: FragmentTrackingBinding? = null
-    // This property is only valid between onCreateView and
+    // todo This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
@@ -36,7 +44,7 @@ class TrackingFragment : Fragment() {
 
     private var curTimeInMillis = 0L
 
-    private val viewModel: MainViewModel by viewModels()
+     val viewModel: MainViewModel by viewModels()
 
     private var map: GoogleMap? = null
 
@@ -55,6 +63,11 @@ class TrackingFragment : Fragment() {
             toggleRun()
         }
 
+        binding.btnFinishRun.setOnClickListener{
+            zoomToSeeWholeTrack()
+            endRunAndSaveToDb()
+        }
+
         return binding.root
     }
 
@@ -69,6 +82,62 @@ class TrackingFragment : Fragment() {
 
         subscribeToObservers()
     }
+
+    private fun zoomToSeeWholeTrack() {
+        val bounds = LatLngBounds.Builder()
+        for(polyline in pathPoints) {
+            for(pos in polyline) {
+                bounds.include(pos)
+            }
+        }
+
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(),
+                binding.mapView.width,
+                binding.mapView.height,
+                (binding.mapView.height * 0.05f).toInt()
+            )
+        )
+    }
+
+    private fun endRunAndSaveToDb() {
+        map?.snapshot { bmp ->
+            var distanceInMeters = 0
+            for(polyline in pathPoints) {
+                distanceInMeters += calculatePolylineLength(polyline).toInt()
+            }
+            val avgSpeed = round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+            val dateTimestamp = Calendar.getInstance().timeInMillis
+            val weight = 80f
+            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+            val run = Run(bmp, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
+            viewModel.insertRun(run)
+            Toast.makeText(requireContext(), "Run saved successfully", Toast.LENGTH_LONG).show()
+            stopRun()
+        }
+    }
+
+
+    private fun calculatePolylineLength(polyline: Polyline): Float {
+        var distance = 0f
+        for(i in 0..polyline.size - 2) {
+            val pos1 = polyline[i]
+            val pos2 = polyline[i + 1]
+
+            val result = FloatArray(1)
+            Location.distanceBetween(
+                pos1.latitude,
+                pos1.longitude,
+                pos2.latitude,
+                pos2.longitude,
+                result
+            )
+            distance += result[0]
+        }
+        return distance
+    }
+
 
     private fun subscribeToObservers() {
         TrackingService.isTracking.observe(viewLifecycleOwner) {
@@ -96,7 +165,6 @@ class TrackingFragment : Fragment() {
             sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
