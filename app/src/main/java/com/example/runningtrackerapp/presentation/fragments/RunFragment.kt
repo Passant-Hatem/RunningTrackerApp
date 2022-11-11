@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningtrackerapp.R
 import com.example.runningtrackerapp.databinding.FragmentRunBinding
+import com.example.runningtrackerapp.presentation.adapter.RunAdapter
 import com.example.runningtrackerapp.presentation.viewmodels.MainViewModel
 import com.example.runningtrackerapp.util.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
@@ -20,7 +23,10 @@ import pub.devrel.easypermissions.EasyPermissions
 
 @AndroidEntryPoint
 class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
+
     private val viewModel: MainViewModel by viewModels()
+
+    private lateinit var runAdapter: RunAdapter
 
     private var _binding: FragmentRunBinding? = null
     // This property is only valid between onCreateView and
@@ -42,6 +48,24 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+
+        viewModel.runsSortedByDate.observe(viewLifecycleOwner) {
+            runAdapter.submitList(it)
+        }
+
+    }
+
+    private fun setupRecyclerView() = binding.rvRuns.apply {
+        runAdapter = RunAdapter()
+        adapter = runAdapter
+        layoutManager = LinearLayoutManager(requireContext())
+    }
+
 
     private fun requestLocationPermissions() {
         if(hasLocationPermission()){
