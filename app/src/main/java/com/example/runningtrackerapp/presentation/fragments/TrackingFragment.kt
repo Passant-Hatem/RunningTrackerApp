@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.round
 
 @AndroidEntryPoint
@@ -49,6 +50,9 @@ class TrackingFragment : Fragment() {
     private var map: GoogleMap? = null
 
     private var menu: Menu? = null
+
+    @set:Inject
+    var weight = 80f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,7 +113,6 @@ class TrackingFragment : Fragment() {
             }
             val avgSpeed = round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
-            val weight = 80f
             val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
             val run = Run(bmp, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
             viewModel.insertRun(run)
