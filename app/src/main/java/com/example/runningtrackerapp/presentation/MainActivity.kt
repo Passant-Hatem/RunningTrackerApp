@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.setOnNavigationItemReselectedListener{
+            /*No-Op*/
+        }
     }
 
     private fun setupNavController(): NavController {
