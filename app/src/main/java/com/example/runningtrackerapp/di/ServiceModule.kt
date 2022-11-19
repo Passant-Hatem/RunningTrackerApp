@@ -1,12 +1,10 @@
 package com.example.runningtrackerapp.di
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.example.runningtrackerapp.R
-import com.example.runningtrackerapp.presentation.MainActivity
 import com.example.runningtrackerapp.util.Constants
 import com.google.android.gms.location.LocationServices
 import dagger.Module
@@ -33,10 +31,10 @@ object ServiceModule {
     ) = PendingIntent.getActivity(
         context,
         0,
-        Intent(context, MainActivity::class.java).also {
+        Intent(context, LocationServices::class.java).also {
             it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
         },
-        PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
     @ServiceScoped
