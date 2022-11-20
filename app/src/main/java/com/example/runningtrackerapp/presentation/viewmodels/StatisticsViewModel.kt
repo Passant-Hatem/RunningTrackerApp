@@ -17,7 +17,4 @@ class StatisticsViewModel @Inject constructor(
 
     val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
 
-
-
-
 }
