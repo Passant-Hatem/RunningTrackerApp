@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.runningtrackerapp.databinding.FragmentUserInfoBinding
+import com.example.runningtrackerapp.domain.model.UserInfo
+import com.example.runningtrackerapp.domain.model.UserInfoState
 import com.example.runningtrackerapp.presentation.MainActivity
 import com.example.runningtrackerapp.util.Constants
 import com.google.android.material.snackbar.Snackbar
@@ -75,11 +77,7 @@ class UserInfoFragment : Fragment() {
             .putString(Constants.KEY_NAME, name)
             .putFloat(Constants.KEY_WEIGHT, weight)
             .putFloat(Constants.KEY_HEIGHT, height)
-            .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
             .apply()
-        //todo
-        val toolbarText = "Let's go, $name!"
-        requireActivity().actionBar?.title = toolbarText
     }
 
     private fun finishBoarding(){
@@ -93,17 +91,4 @@ class UserInfoFragment : Fragment() {
         editor.putBoolean("Finished", true)
         editor.apply()
     }
-}
-
-data class UserInfo(
-    val name: String = "",
-    val weight: Float = 0f,
-    val height: Float = 0f,
-    var state: UserInfoState = UserInfoState.EmptyFields
-)
-
-enum class UserInfoState{
-    Success,
-    EmptyFields,
-    WrongInfo
 }
