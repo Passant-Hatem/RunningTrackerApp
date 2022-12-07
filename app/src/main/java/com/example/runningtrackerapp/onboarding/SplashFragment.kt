@@ -1,0 +1,44 @@
+package com.example.runningtrackerapp.onboarding
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.example.runningtrackerapp.R
+import com.example.runningtrackerapp.databinding.FragmentSplashBinding
+import com.example.runningtrackerapp.presentation.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class SplashFragment : Fragment() {
+
+    private lateinit var binding: FragmentSplashBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSplashBinding.inflate(inflater, container, false)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (onBoardingFinished())
+              startActivity(Intent(activity, MainActivity::class.java))
+            else
+                findNavController().navigate(R.id.action_splashFragment_to_userInfoFragment)
+        }, 2000)
+
+        return binding.root
+    }
+
+    private fun onBoardingFinished(): Boolean{
+        val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("Finished", false)
+    }
+
+}
