@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -20,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="32dp"
             android:gravity="center_horizontal"
-            android:text="Update your info"
+            android:text="@string/update_your_info"
             android:textSize="34sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -35,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Your Name"
+                android:hint="@string/your_name"
                 android:inputType="textPersonName" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -52,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Your Weight"
+                android:hint="@string/your_weight"
                 android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -69,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Your Height"
+                android:hint="@string/your_height"
                 android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -88,7 +87,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/done_outline"
-        android:contentDescription="update info" />
+        android:contentDescription="@string/update_info" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
