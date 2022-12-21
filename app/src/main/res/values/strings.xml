@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Run</string>
-    <string name="google_maps_key">AIzaSyCG1bsafE9INj6WM4wXMAj-Kg-q8X4Xk0c</string>
+    <string name="google_maps_key">Add_your_api_key_here</string>
     <string name="date">DATE</string>
     <string name="duration">DURATION</string>
     <string name="avg_speed">AVG SPEED</string>
