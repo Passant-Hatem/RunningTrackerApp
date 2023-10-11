@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.example.runningtrackerapp.R
-import com.example.runningtrackerapp.databinding.FragmentRunBinding
 import com.example.runningtrackerapp.databinding.FragmentStatisticsBinding
 import com.example.runningtrackerapp.databinding.MarkerViewBinding
 import com.example.runningtrackerapp.presentation.viewmodels.StatisticsViewModel
@@ -82,13 +80,13 @@ class StatisticsFragment : Fragment() {
         viewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer {
             it?.let {
                 val allAvgSpeeds = it.indices.map { i -> BarEntry(i.toFloat(), it[i].avgSpeedInKMH) }
-                val bardataSet = BarDataSet(allAvgSpeeds, "Avg Speed Over Time").apply {
+                val barDataSet = BarDataSet(allAvgSpeeds, "Avg Speed Over Time").apply {
                     valueTextColor = Color.WHITE
                     color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
                 }
-                barChart.data = BarData(bardataSet)
+                barChart.data = BarData(barDataSet)
                 val binding = MarkerViewBinding.inflate(LayoutInflater.from(requireContext()))
-                barChart.marker = CustomMarkerView(it.reversed(), requireContext(), R.layout.marker_view, binding)
+//                barChart.marker = CustomMarkerView(it.reversed(), requireContext(), R.layout.marker_view, binding)
                 barChart.invalidate()
             }
         })
@@ -97,14 +95,14 @@ class StatisticsFragment : Fragment() {
     private fun setupBarChart() = with(binding) {
         barChart.xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
-            setDrawLabels(false)
-            axisLineColor = Color.WHITE
-            textColor = Color.WHITE
+            setDrawLabels(true)
+            axisLineColor = Color.BLACK
+            textColor = Color.BLACK
             setDrawGridLines(false)
         }
         barChart.axisLeft.apply {
-            axisLineColor = Color.WHITE
-            textColor = Color.WHITE
+            axisLineColor =Color.BLACK
+            textColor = Color.BLACK
             setDrawGridLines(false)
         }
         barChart.axisRight.apply {
@@ -113,7 +111,7 @@ class StatisticsFragment : Fragment() {
             setDrawGridLines(false)
         }
         barChart.apply {
-            description.text = "Avg Speed Over Time"
+            description.text = ""
             legend.isEnabled = false
         }
     }
